@@ -1,0 +1,354 @@
+<!-- login.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login | Expense Tracker</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 1rem;
+    }
+
+    .login-container {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 2.5rem;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      width: 100%;
+      max-width: 420px;
+      transform: translateY(0);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-container:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    }
+
+    .login-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(90deg, #009688, #00bcd4);
+    }
+
+    .login-container h2 {
+      text-align: center;
+      margin-bottom: 1.75rem;
+      color: #2d3748;
+      font-size: 1.75rem;
+      font-weight: 700;
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 1.25rem;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 0.875rem 1rem 0.875rem 2.75rem;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      font-size: 0.9375rem;
+      transition: all 0.3s ease;
+      background-color: #f8fafc;
+    }
+
+    .input-group input:focus {
+      outline: none;
+      border-color: #009688;
+      box-shadow: 0 0 0 2px rgba(0, 150, 136, 0.2);
+      background-color: #fff;
+    }
+
+    .input-group i {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #64748b;
+      font-size: 1rem;
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: 0.875rem;
+      background: linear-gradient(135deg, #009688 0%, #00bcd4 100%);
+      border: none;
+      color: white;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 0.5rem;
+      transition: all 0.3s ease;
+      font-size: 0.9375rem;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-login:hover {
+      background: linear-gradient(135deg, #00897b 0%, #00acc1 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 150, 136, 0.3);
+    }
+
+    .btn-login:active {
+      transform: translateY(0);
+    }
+
+    .btn-login:disabled {
+      background: #cbd5e0;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .error {
+      color: #e53e3e;
+      margin: 0.75rem 0;
+      text-align: center;
+      font-size: 0.875rem;
+      min-height: 1.25rem;
+      transition: all 0.3s ease;
+    }
+
+    .links {
+      text-align: center;
+      margin-top: 1.5rem;
+      font-size: 0.875rem;
+      color: #64748b;
+    }
+
+    .links a {
+      color: #009688;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .links a:hover {
+      color: #00796b;
+      text-decoration: underline;
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #64748b;
+    }
+
+    .password-toggle:hover {
+      color: #009688;
+    }
+
+    /* Loading spinner */
+    .spinner {
+      display: inline-block;
+      width: 1rem;
+      height: 1rem;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Animation for error message */
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-5px); }
+      40%, 80% { transform: translateX(5px); }
+    }
+
+    .shake {
+      animation: shake 0.4s ease-in-out;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 480px) {
+      .login-container {
+        padding: 1.75rem;
+      }
+      
+      .login-container h2 {
+        font-size: 1.5rem;
+      }
+    }
+
+
+
+    .input-group.password-field {
+      position: relative;
+    }
+    
+    .input-group.password-field i.fa-lock {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #64748b;
+      font-size: 1rem;
+    }
+    
+    .input-group.password-field input {
+      padding-left: 2.75rem; /* Make space for the lock icon */
+      padding-right: 2.75rem; /* Make space for the eye icon */
+    }
+    
+    .password-toggle {
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #64748b;
+      z-index: 2; /* Ensure it's above other elements */
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h2>Welcome Back</h2>
+    <form id="loginForm">
+      <div class="input-group">
+        <i class="fas fa-envelope"></i>
+        <input type="email" id="email" placeholder="Email" required autocomplete="email" />
+      </div>
+      
+    <div class="input-group password-field">
+      <i class="fas fa-lock"></i>
+      <input type="password" id="password" placeholder="Password" required autocomplete="current-password" />
+      <i class="fas fa-eye password-toggle" id="togglePassword"></i>
+    </div>
+      
+      <div class="flex items-center justify-between mb-4">
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="rememberMe" class="form-checkbox h-4 w-4 text-teal-600">
+          <span class="ml-2 text-sm text-gray-600">Remember me</span>
+        </label>
+        <a href="forgot-password.html" class="text-sm text-teal-600 hover:text-teal-700">Forgot password?</a>
+      </div>
+      
+      <button type="submit" class="btn-login" id="loginBtn">
+        <span id="btnText">Login</span>
+        <span id="btnSpinner" class="spinner hidden"></span>
+      </button>
+      
+      <div class="error" id="error"></div>
+    </form>
+    
+    <div class="links">
+      Don't have an account? <a href="register.html">Create one</a>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.getElementById('loginForm');
+      const errorDiv = document.getElementById('error');
+      const loginBtn = document.getElementById('loginBtn');
+      const btnText = document.getElementById('btnText');
+      const btnSpinner = document.getElementById('btnSpinner');
+      const togglePassword = document.getElementById('togglePassword');
+      const passwordInput = document.getElementById('password');
+      const rememberMe = document.getElementById('rememberMe');
+
+      // Check if there's saved email in localStorage
+      if (localStorage.getItem('rememberedEmail')) {
+        document.getElementById('email').value = localStorage.getItem('rememberedEmail');
+        rememberMe.checked = true;
+      }
+
+      // Toggle password visibility
+      togglePassword.addEventListener('click', function() {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        this.classList.toggle('fa-eye');
+        this.classList.toggle('fa-eye-slash');
+      });
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        // Reset error state
+        errorDiv.textContent = '';
+        errorDiv.classList.remove('shake');
+        
+        // Get form values
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        
+        // Validate inputs
+        if (!email || !password) {
+          errorDiv.textContent = 'Please fill in all fields';
+          errorDiv.classList.add('shake');
+          return;
+        }
+        
+        // Show loading state
+        loginBtn.disabled = true;
+        btnText.textContent = 'Logging in...';
+        btnSpinner.classList.remove('hidden');
+        
+        try {
+          const res = await fetch('http://localhost:5000/api/auth/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password })
+          });
+
+          const data = await res.json();
+
+          if (!res.ok) {
+            throw new Error(data.error || 'Login failed. Please check your credentials.');
+          }
+
+          // Save email if "Remember me" is checked
+          if (rememberMe.checked) {
+            localStorage.setItem('rememberedEmail', email);
+          } else {
+            localStorage.removeItem('rememberedEmail');
+          }
+
+          // Store token and redirect
+          localStorage.setItem('token', data.token);
+          window.location.href = 'index.html';
+          
+        } catch (err) {
+          // Show error
+          errorDiv.textContent = err.message;
+          errorDiv.classList.add('shake');
+          
+          // Reset button state
+          loginBtn.disabled = false;
+          btnText.textContent = 'Login';
+          btnSpinner.classList.add('hidden');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
